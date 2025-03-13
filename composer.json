@@ -1,0 +1,25 @@
+{
+  "name": "famesystems/reseller-api-sdk",
+  "description": "SDK for the FameSystems.de Reseller API ^2.0",
+  "version": "1.0.0",
+  "minimum-stability": "stable",
+  "type": "library",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Rene.Wittenberg",
+      "email": "wittenberg@famesystems.de"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "FameSystems\\ResellerAPI\\": "src/"
+    }
+  },
+  "prefer-stable": true,
+  "require": {
+    "php": "^8.0",
+    "ext-curl": "*",
+    "ext-json": "*"
+  }
+}
