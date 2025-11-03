@@ -13,7 +13,7 @@ class Client implements ApiClientInterface
 
     private $token = null;
     private $userAgent = 'FameSystems Reseller SDK';
-    private $apiUrl = 'https://dev-api.famesystems.de/';
+    private $apiUrl = 'https://v2.resellerapi.de';
     private $CURLOPT_SSL_VERIFYPEER = false;
     private $CURLOPT_TIMEOUT = 30;
 

@@ -11,8 +11,6 @@ use FameSystems\ResellerAPI\Models\ApiResponse\Domain\getNameServerApiResponse;
 use FameSystems\ResellerAPI\Models\ApiResponseMapper;
 use FameSystems\ResellerAPI\Models\ApiResponse\Domain\checkDomainAvailabilityApiResponse;
 
-opcache_reset();
-
 class Domain
 {
     private Client $client;
@@ -126,7 +124,7 @@ class Domain
             'zoneC' => $zoneC,
             'ns1' => $ns1,
             'ns2' => $ns2,
-            'authCode' => $authCode
+            'authcode' => $authCode
         ]);
     }
 

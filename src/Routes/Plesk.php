@@ -23,28 +23,28 @@ class Plesk
     // duration is in months and must be between 1 and 12 months
     public function orderLicense($type,int $duration = 1,string $reference = "") : ApiResponse{
         return $this->client->post("plesk/license/create",
-        [
-            'type' => $type,
-            'duration' => $duration,
-            'reference' => $reference
-        ]);
+            [
+                'type' => $type,
+                'duration' => $duration,
+                'reference' => $reference
+            ]);
     }
 
     public function extendLicense(string $license,int $duration = 1) : ApiResponse{
         return $this->client->post("plesk/license/extend",
-        [
-            'license' => $license,
-            'duration' => $duration,
-        ]);
+            [
+                'license' => $license,
+                'duration' => $duration,
+            ]);
     }
 
     public function setLicenseBinding(string $license,string $ip_address, string $description = "") : ApiResponse{
         return $this->client->post("plesk/license/binding",
-        [
-            'license' => $license,
-            'ip_address' => $ip_address,
-            'description' => $description
-        ]);
+            [
+                'license' => $license,
+                'ip_address' => $ip_address,
+                'description' => $description
+            ]);
     }
 
     public function getLicenseReports(string $license) : ApiResponse{
