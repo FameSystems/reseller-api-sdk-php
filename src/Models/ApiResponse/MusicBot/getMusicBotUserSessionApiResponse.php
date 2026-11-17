@@ -15,5 +15,3 @@ class getMusicBotUserSessionApiResponse extends ApiResponse {
         $this->musicBotUserSession = new musicBotUserSession($data);
     }
 }
-
-?>

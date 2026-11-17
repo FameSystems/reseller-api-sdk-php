@@ -28,5 +28,3 @@ class checkDomainApiResponse extends ApiResponse {
         $this->premiumTransferPrice = $data->premiumTransferPrice;
     }
 }
-
-?>

@@ -23,6 +23,3 @@ class getPleskPricingApiResponse extends ApiResponse {
         }, $data);
     }
 }
-
-
-?>

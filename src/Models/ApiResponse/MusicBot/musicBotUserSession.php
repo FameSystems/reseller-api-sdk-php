@@ -14,6 +14,3 @@ class  musicBotUserSession{
         $this->panelUrl = $musicBotUserSessionData->panel_url ?? "";
     }
 }
-
-
-?>

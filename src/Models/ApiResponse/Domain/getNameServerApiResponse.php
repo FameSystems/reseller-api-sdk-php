@@ -14,5 +14,3 @@ class getNameServerApiResponse extends ApiResponse {
         $this->nameServer = new DomainNameServer($data);
     }
 }
-
-?>

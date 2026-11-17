@@ -14,6 +14,3 @@ class getMusicBotUserApiResponse extends ApiResponse {
         $this->musicBotUser = new musicBotUser($data);
     }
 }
-
-
-?>

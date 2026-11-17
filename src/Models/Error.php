@@ -15,5 +15,3 @@ class Error {
         $this->constantName = ErrorCodeResolver::getConstantName($code);
     }
 }
-
-?>

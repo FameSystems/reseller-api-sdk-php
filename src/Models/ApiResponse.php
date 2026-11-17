@@ -46,5 +46,3 @@ class ApiResponse {
         return $this->errorCode;
     }
 }
-
-?>

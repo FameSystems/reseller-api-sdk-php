@@ -23,5 +23,3 @@ class DomainCheck {
         $this->premiumTransferPrice = $domainData->premiumTransferPrice ?? 0.00;
     }
 }
-
-?>

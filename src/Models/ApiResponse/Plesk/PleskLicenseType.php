@@ -81,5 +81,3 @@ class PleskLicenseType{
     public string $groupName;
     public float $price;
 }
-
-?>

@@ -48,6 +48,27 @@ The SDK supports all endpoints provided by the **FameSystems Reseller API**.
 
 ---
 
+## 🖥 KVM Servers (since 1.2.0)
+
+Order KVM servers with a free configuration and manage them via `$resellerAPI->kvm`:
+
+```php
+$quote = $resellerAPI->kvm->configuratorQuote([
+    'cpu_type_id' => 3, 'cores' => 2, 'ram' => 4, 'disk' => 50,
+    'ipv4' => 1, 'backups' => 3, 'os_id' => 18, 'runtime' => 1,
+]);
+echo $quote->getData()->priceMonthly; // net EUR per month
+```
+
+- Configurator: `configuratorOptions()`, `configuratorQuote()`, `configuratorOrderTest()`, `configuratorOrder()`, `renew()`
+- Control: `getServer()`, `getStatus()`, `getStats()`, `start()`, `restart()`, `shutdown()`, `stop()`, `reinstall()`
+- Lifecycle: `suspend()`, `unsuspend()`, `terminate()`
+- Backups: `getBackups()`, `createBackup()`, `restoreBackup()`, `deleteBackup()`, `getBackupSchedule()`, `setBackupSchedule()`
+
+Examples: [`examples/KVM`](examples/KVM) · Guide: [KVM ordering via API](https://docs.resellerapi.de/kvm/api/)
+
+---
+
 ## 🔒 Authentication
 
 All requests require a **Bearer Token** for authentication.

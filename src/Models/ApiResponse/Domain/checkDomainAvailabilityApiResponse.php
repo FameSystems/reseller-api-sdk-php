@@ -17,5 +17,3 @@ class checkDomainAvailabilityApiResponse extends ApiResponse {
         }, $data);
     }
 }
-
-?>

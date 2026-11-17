@@ -15,4 +15,3 @@ class Messages {
         $this->success = is_array($success) ? $success : (array)$success;
     }
 }
-?>

@@ -17,5 +17,3 @@ class DomainNameServer{
         if(isset($domainData->ns5)){$this->ns5 = $domainData->ns5 ?? "";}
     }
 }
-
-?>

@@ -8,5 +8,3 @@ interface ApiClientInterface {
     public function delete($url, $params = []);
     public function put($url, $params = []);
 }
-
-?>

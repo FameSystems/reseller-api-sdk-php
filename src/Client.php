@@ -10,12 +10,17 @@ use FameSystems\ResellerAPI\Models\Messages;
 
 class Client implements ApiClientInterface
 {
+    public const DEFAULT_API_URL = 'https://v2.resellerapi.de/';
+    public const DEFAULT_USER_AGENT = 'FameSystems Reseller SDK';
 
     private $token = null;
-    private $userAgent = 'FameSystems Reseller SDK';
-    private $apiUrl = 'https://v2.resellerapi.de';
-    private $CURLOPT_SSL_VERIFYPEER = false;
+    private $userAgent = self::DEFAULT_USER_AGENT;
+    private $apiUrl = self::DEFAULT_API_URL;
+    private $CURLOPT_SSL_VERIFYPEER = true;
     private $CURLOPT_TIMEOUT = 30;
+
+    /** Optional: Hash des aufrufenden Moduls (z. B. WHMCS-Modul), als Header "Module-Route". */
+    private ?string $moduleRoute = null;
 
     public function __construct($token, $apiUrl = null, $userAgent = null)
     {
@@ -27,6 +32,21 @@ class Client implements ApiClientInterface
         if (!(is_null($userAgent))) {
             $this->userAgent = $userAgent;
         }
+    }
+
+    /** Setzt den Header "Module-Route", damit Module das SDK nicht mehr selbst patchen müssen. */
+    public function setModuleRoute(?string $moduleRoute): self
+    {
+        $this->moduleRoute = $moduleRoute;
+
+        return $this;
+    }
+
+    public function setTimeout(int $seconds): self
+    {
+        $this->CURLOPT_TIMEOUT = max(1, $seconds);
+
+        return $this;
     }
 
     public function get($url, $params = [])
@@ -51,17 +71,20 @@ class Client implements ApiClientInterface
 
     private function request($url, $parameters, $method)
     {
-        $url = $this->apiUrl . $url;
+        $url = rtrim($this->apiUrl, '/') . '/' . ltrim($url, '/');
 
         $curlRequest = curl_init($url);
 
-
-        curl_setopt($curlRequest, CURLOPT_HTTPHEADER, array(
+        $headers = array(
             'Api-Token: ' . $this->token,
             'User-Agent: ' . $this->userAgent,
             'Content-Type: application/x-www-form-urlencoded',
             'accept: application/json'
-        ));
+        );
+        if ($this->moduleRoute !== null && $this->moduleRoute !== '') {
+            $headers[] = 'Module-Route: ' . $this->moduleRoute;
+        }
+        curl_setopt($curlRequest, CURLOPT_HTTPHEADER, $headers);
 
         if ($method == 'GET') {
             if (!empty($parameters)) {
@@ -79,15 +102,21 @@ class Client implements ApiClientInterface
         curl_setopt($curlRequest, CURLOPT_USERAGENT, $this->userAgent);
         curl_setopt($curlRequest, CURLOPT_TIMEOUT, $this->CURLOPT_TIMEOUT);
 
-        if (!$data = curl_exec($curlRequest)) {
+        $data = curl_exec($curlRequest);
+        if ($data === false || $data === '') {
             $error = curl_error($curlRequest);
-            return ['error' => $error];
+            curl_close($curlRequest);
+
+            return self::errorResponse('Connection to the Reseller API failed: ' . ($error !== '' ? $error : 'empty response'));
         }
 
         curl_close($curlRequest);
 
 
         $responseObj = json_decode($data);
+        if (!is_object($responseObj) || !isset($responseObj->status)) {
+            return self::errorResponse('The Reseller API returned an invalid response.');
+        }
 
         // Set error code from the response (if available)
         $errorCode = 0;
@@ -96,33 +125,49 @@ class Client implements ApiClientInterface
             if (is_countable($responseObj->messages->errors) && count($responseObj->messages->errors) > 0) {
                 $errorCode = $responseObj->messages->errors[0]->code;  // Hier nehmen wir den ersten Fehlercode
                 $errorMessage = $responseObj->messages->errors[0]->message;  // Hier nehmen wir die erste Fehlermeldung
-            } else {
+            } elseif (isset($responseObj->messages->errors->code)) {
                 $errorCode = $responseObj->messages->errors->code;
                 $errorMessage = $responseObj->messages->errors->message;
             }
-
         }
 
+        // Conversion of stdClass to Messages instance; jeder Fehler mit eigenem Code und Text.
+        $errors = [];
+        foreach ((array)($responseObj->messages->errors ?? []) as $error) {
+            if (is_object($error) && isset($error->code)) {
+                $errors[] = new Error((int)$error->code, (string)($error->message ?? ''));
+            }
+        }
+        if ($errors === [] && $errorCode) {
+            $errors[] = new Error((int)$errorCode, (string)$errorMessage);
+        }
 
-        // Conversion of stdClass to Messages instance
         $messages = new Messages(
-            array_map(fn($error) => new Error($errorCode, $errorMessage), (array)$responseObj->messages->errors ?? []),
+            $errors,
             $responseObj->messages->warnings ?? [],
             $responseObj->messages->infos ?? [],
             $responseObj->messages->success ?? []
         );
 
-        $requestId = $responseObj->requestId;
-        if($requestId == null || is_numeric($requestId) == false){$requestId = 0;}
+        $requestId = $responseObj->requestId ?? 0;
+        if ($requestId == null || is_numeric($requestId) == false) {
+            $requestId = 0;
+        }
 
 
         return new ApiResponse(
-            $requestId,
-            $responseObj->status,
-            $responseObj->data,
+            (int)$requestId,
+            (string)$responseObj->status,
+            $responseObj->data ?? null,
             $messages,  // Transfer of the message instance
-            $errorCode  // Set error code in the FameSystems ApiResponse
+            (int)$errorCode  // Set error code in the FameSystems ApiResponse
         );
+    }
+
+    /** Fehlerantwort im üblichen Format, z. B. wenn die API nicht erreichbar ist. */
+    private static function errorResponse(string $message): ApiResponse
+    {
+        return new ApiResponse(0, 'error', null, new Messages([new Error(0, $message)], [], [], []), 0);
     }
 
     // Helper method to ensure that the data is transferred as an array
@@ -148,10 +193,3 @@ class Client implements ApiClientInterface
     }
 
 }
-
-
-?>
-
-
-
-

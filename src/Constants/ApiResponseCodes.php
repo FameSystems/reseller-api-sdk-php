@@ -57,6 +57,3 @@ abstract class ApiResponseCodes
     public const SECURITY_ERROR = 53001;
     public const SECURITY_VIOLATION = 53002;
 }
-
-
-?>

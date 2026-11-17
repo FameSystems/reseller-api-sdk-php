@@ -50,4 +50,3 @@ class ApiResponseMapper {
         return is_array($data) ? $data : (array)$data;
     }
 }
-?>

@@ -44,5 +44,3 @@ class getDomainDNSRecordsApiResponse extends ApiResponse {
         }, $data);
     }
 }
-
-?>
