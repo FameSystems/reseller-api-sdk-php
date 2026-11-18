@@ -4,6 +4,7 @@ namespace FameSystems\ResellerAPI;
 
 use FameSystems\ResellerAPI\Routes\Account;
 use FameSystems\ResellerAPI\Routes\Domain;
+use FameSystems\ResellerAPI\Routes\IpNet;
 use FameSystems\ResellerAPI\Routes\KVM;
 use FameSystems\ResellerAPI\Routes\Musicbot;
 use FameSystems\ResellerAPI\Routes\Plesk;
@@ -22,6 +23,8 @@ class ResellerAPI{
 
     public KVM $kvm;
 
+    public IpNet $ipnet;
+
     /**
      * @param string $token
      * @param string|null $apiUrl
@@ -34,6 +37,7 @@ class ResellerAPI{
          $this->plesk = new Plesk($this->client);
          $this->musicbot = new Musicbot($this->client);
          $this->kvm = new KVM($this->client);
+         $this->ipnet = new IpNet($this->client);
      }
 
 }

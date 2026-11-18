@@ -69,6 +69,28 @@ Examples: [`examples/KVM`](examples/KVM) · Guide: [KVM ordering via API](https:
 
 ---
 
+## 🌐 IP Networks (since 1.3.0)
+
+Manage your rented IP networks via `$resellerAPI->ipnet` (permission `IPNET_FULL`):
+
+```php
+$networks = $resellerAPI->ipnet->listNetworks();
+$page     = $resellerAPI->ipnet->entries(42, 1, 50);
+$resellerAPI->ipnet->updateEntry(42, '45.91.251.200', 'mail.example.com', null, IpNet::STATUS_IN_USE);
+```
+
+- Networks: `listNetworks()`, `getNetwork()`
+- Entries: `entries()`, `updateEntry()`, `entryHistory()`
+- Traffic and DDoS: `traffic()`, `vlanTraffic()`, `ddos()`, `ipStats()`
+- Blacklists: `blacklist()`, `blacklistScan()`, `blacklistIp()`
+- Reachability: `onlineScan()`, `onlineScanState()`
+
+Cooldowns and hourly limits answer with code `42902` / `42903` and `data->retryAfter` in seconds.
+
+Examples: [`examples/IpNet`](examples/IpNet) · Guide: [IP networks via API](https://docs.resellerapi.de/ipnet/management/)
+
+---
+
 ## 🔒 Authentication
 
 All requests require a **Bearer Token** for authentication.

@@ -25,6 +25,8 @@ abstract class ApiResponseCodes
     public const VALIDATION_ERROR = 40002;          // Validation-specific error
     public const MISSING_REQUIRED_FIELD = 40003;    // Missing fields in the request
     public const INVALID_FORMAT = 40004;            // Invalid format for a parameter
+    public const INSUFFICIENT_FUNDS = 40005;        // Insufficient funds for the operation
+    public const IPV6_NOT_SUPPORTED = 40006;        // Only possible for IPv4 (IP networks)
 
     // 401: Unauthorized Codes
     public const MISSING_TOKEN = 40101;
@@ -38,9 +40,15 @@ abstract class ApiResponseCodes
     // 404: Not Found Codes
     public const NOT_FOUND = 40401;                 // Generic not found
     public const RESOURCE_NOT_FOUND = 40402;        // Specific resource not found
+    public const PRODUCT_NOT_FOUND = 40403;         // Product not found, not yours or ended
 
     // 405: Method Not Allowed Codes
     public const METHOD_NOT_ALLOWED = 40501;
+
+    // 429: Too Many Requests Codes
+    public const TOO_MANY_REQUESTS = 42901;
+    public const COOLDOWN_ACTIVE = 42902;           // Action on cooldown, see data->retryAfter
+    public const RATE_LIMIT_EXCEEDED = 42903;       // Hourly limit reached, see data->retryAfter
 
     // 500: Internal Server Error Codes
     public const INTERNAL_SERVER_ERROR = 50001;
